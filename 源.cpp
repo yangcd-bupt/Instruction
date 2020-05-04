@@ -2,6 +2,7 @@
 #include<iostream>
 #include<fstream>
 #include<cmath>
+#include<cstring>
 #define MAX_N 512//存储器行数
 #define MAX_M 32//指令长度为一个字长
 using namespace std;
@@ -80,7 +81,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 2://直接寻址
-		 value = Transform_1(temp, 6);
+		value = Transform_1(temp, 6);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
 		{
@@ -88,8 +89,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 3://间接寻址
-		 value_1 = Transform_1(temp, 6);
-		 value_2 = Transform_1(Memory[value_1], 32);
+		value_1 = Transform_1(temp, 6);
+		value_2 = Transform_1(Memory[value_1], 32);
 		address[distinguish - 1] = value_2;
 		for (i = 0; i < 32; i++)
 		{
@@ -97,7 +98,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 4://寄存器寻址
-		 value = Transform_1(temp, 6);
+		value = Transform_1(temp, 6);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
 		{
@@ -105,8 +106,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 5://寄存器间接寻址
-		 value_1 = Transform_1(temp, 6);
-		 value_2 = Transform_1(Register[value_1], 32);
+		value_1 = Transform_1(temp, 6);
+		value_2 = Transform_1(Register[value_1], 32);
 		address[distinguish - 1] = value_2;
 		for (i = 0; i < 32; i++)
 		{
@@ -116,8 +117,8 @@ void Addressing(int distinguish)
 	case 6://隐含寻址
 		break;
 	case 7://基址寻址
-		 value_1 = Transform_1(Rd, 32);
-		 value_2 = Transform_1(temp, 6);
+		value_1 = Transform_1(Rd, 32);
+		value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
 		value_2 = value_1 + value_2;
 		for (i = 0; i < 32; i++)
@@ -126,8 +127,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 8://变址寻址
-		 value_1 = Transform_1(Rx, 32);
-		 value_2 = Transform_1(temp, 6);
+		value_1 = Transform_1(Rx, 32);
+		value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
 		value_2 = value_1 + value_2;
 		for (i = 0; i < 32; i++)
@@ -136,8 +137,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 9://相对寻址
-		 value_1 = PC;
-		 value_2 = Transform_1(temp, 6);
+		value_1 = PC;
+		value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
 		value_2 = value_1 + value_2;
 		for (i = 0; i < 32; i++)
@@ -265,7 +266,7 @@ void INC()
 	}
 	Addressing(1);
 	int addition_number_1 = Transform_1(MDR[0], 32);
-	addition_number_1 = addition_number_1 + 1 ;
+	addition_number_1 = addition_number_1 + 1;
 	Transform_2(addition_number_1, Memory[address[0]], 32);
 }
 void DEC()
@@ -277,7 +278,7 @@ void DEC()
 	}
 	Addressing(1);
 	int minuend = Transform_1(MDR[0], 32);
-	minuend = minuend - 1 ;
+	minuend = minuend - 1;
 	Transform_2(minuend, Memory[address[0]], 32);
 }
 void MUL()
@@ -331,12 +332,12 @@ void CMP()
 	Addressing(2);
 	int compared_number_1 = Transform_1(MDR[0], 32);
 	int compared_number_2 = Transform_1(MDR[1], 32);
-	PSW = compared_number_1 - compared_number_2 ;
+	PSW = compared_number_1 - compared_number_2;
 }
 void TEST()
 {
 	int i;
-	char test[MAX_M]={};
+	char test[MAX_M] = {};
 	for (i = 0; i < 4; i++)
 	{
 		MAR[i] = Memory[PC][6 + i];
@@ -347,18 +348,18 @@ void TEST()
 		MAR[i] = Memory[PC][19 + i];
 	}
 	Addressing(2);
-	for(i=0;i<MAX_M;i++)
+	for (i = 0; i < MAX_M; i++)
 	{
-		if(MDR[0][i]==1&&MDR[1][i]==1)
-		test[i]=1;
-		else 
-		test[i]=0;
+		if (MDR[0][i] == 1 && MDR[1][i] == 1)
+			test[i] = 1;
+		else
+			test[i] = 0;
 	}
-	for(i=0;i<MAX_M;i++)
+	for (i = 0; i < MAX_M; i++)
 	{
-		if(test[i]==1)
+		if (test[i] == 1)
 		{
-			ZF=0;
+			ZF = 0;
 			break;
 		}
 	}
@@ -483,7 +484,7 @@ void SHL()//SHL 1000 111111111 11111
 	}
 
 }
-void SHR(){
+void SHR() {
 	int i;
 	for (i = 0; i < 4; i++)
 	{
@@ -497,10 +498,10 @@ void SHR(){
 	Addressing(2);
 	int number_1 = Transform_1(MDR[0], 32);
 	int number_2 = Transform_1(MDR[1], 32);
-	number_1=number_1 << number_2;
+	number_1 = number_1 << number_2;
 	Transform_2(number_1, Memory[address[0]], 32);
 }
-void SAR(){
+void SAR() {
 	int i;
 	for (i = 0; i < 4; i++)
 	{
@@ -514,10 +515,10 @@ void SAR(){
 	Addressing(2);
 	int number_1 = Transform_1(MDR[0], 32);
 	int number_2 = Transform_1(MDR[1], 32);
-	number_1=number_1 << number_2;
+	number_1 = number_1 << number_2;
 	Transform_2(number_1, Memory[address[0]], 32);
 }
-void JMP(){
+void JMP() {
 	int i;
 	for (i = 0; i < 4; i++)
 	{
@@ -526,7 +527,7 @@ void JMP(){
 	Addressing(1);
 	PC = Transform_1(MDR[0], 32);
 }
-void OUT(){
+void OUT() {
 	int i;
 	for (i = 0; i < 4; i++)
 	{
@@ -540,7 +541,7 @@ void OUT(){
 	Addressing(2);
 	Transform_2(MAR[1], Memory[address[0]], 32);
 }
-void IN(){
+void IN() {
 	int i;
 	for (i = 0; i < 4; i++)
 	{
@@ -559,7 +560,7 @@ int main() {
 	int datalen = 0, i = 0;
 	for (int j = 0; j < MAX_M; j++)
 		cout << Memory[0][j];
-	/*while (!file.eof()) {
+	while (!file.eof()) {
 		file >> Memory[i][datalen++];
 		if (datalen == MAX_M)
 		{
@@ -568,11 +569,11 @@ int main() {
 		}
 	}
 	while (PC < i) {
-		strcpy(IR, Memory[PC]);
+		strcpy_s(IR, Memory[PC]);
 
 		char ch[6];
 		int ir;
-		strncpy(ch, IR, 6);
+		strncpy_s(ch, IR, 6);
 		ir = Transform_1(ch,6);
 		switch (ir)
 		{
@@ -581,5 +582,5 @@ int main() {
 			break;
 		}
 		PC++;
-	}*/
+	}
 }
