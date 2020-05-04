@@ -599,8 +599,8 @@ int main() {
 			case 18:SAR();break;
 			case 19:SHR();break;
 			case 20:JMP();break;
-			case 21:In();break;
-			case 22:Out();break;
+			case 21:IN();break;
+			case 22:OUT();break;
 
 				
 		default:
