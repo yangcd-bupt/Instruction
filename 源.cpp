@@ -253,6 +253,120 @@ void PUSH()
 	}
 	Transform_2(value, SP, 32);
 }
+void INC()
+{
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	int addition_number_1 = Transform_1(MDR[0], 32);
+	addition_number_1 = addition_number_1 + 1 ;
+	Transform_2(addition_number_1, Memory[address[0]], 32);
+}
+void DEC()
+{
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	int minuend = Transform_1(MDR[0], 32);
+	minuend = minuend - 1 ;
+	Transform_2(minuend, Memory[address[0]], 32);
+}
+void MUL()
+{
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	int multiplication_number_1 = Transform_1(MDR[0], 32);
+	int multiplication_number_2 = Transform_1(MDR[1], 32);
+	multiplication_number_2 = multiplication_number_1 * multiplication_number_2;
+	Transform_2(multiplication_number_2, Memory[address[1]], 32);
+}
+void DIV()
+{
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	int divisor = Transform_1(MDR[0], 32);
+	int dividend = Transform_1(MDR[1], 32);
+	dividend = dividend / divisor;
+	Transform_2(dividend, Memory[address[1]], 32);
+}
+int CMP()
+{
+	int i;
+	int PSW;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	int compared_number_1 = Transform_1(MDR[0], 32);
+	int compared_number_2 = Transform_1(MDR[1], 32);
+	PSW = compared_number_1 - compared_number_2 ;
+	if (PSW==0)
+	return 1;
+	else 
+	return 0;
+}
+int TEST()
+{
+	int i;
+	int ZF=1;
+	char test[MAX_M]={};
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	for(i=0;i<MAX_M;i++)
+	{
+		if(MDR[0][i]==1&&MDR[1][i]==1)
+		test[i]=1;
+		else 
+		test[i]=0;
+	}
+	for(i=0;i<MAX_M;i++)
+	{
+		if(test[i]==1)
+		{
+			ZF=0;
+			break;
+		}
+	}
+	return ZF;
+}
 void SHR(){
 	int i;
 	for (i = 0; i < 4; i++)
