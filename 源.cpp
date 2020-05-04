@@ -16,6 +16,8 @@ static char IR[MAX_M];//指令寄存器
 static char SP[MAX_M];//栈顶地址寄存器
 static char CL[MAX_M];//移位寄存器
 static int PC = 0;
+static int PSW;
+static int ZF;
 static int address[2];
 //指令格式：6 4 9 4 9
 int Transform_1(char ch[], int length) //二进制串转十进制数值
@@ -314,10 +316,9 @@ void DIV()
 	dividend = dividend / divisor;
 	Transform_2(dividend, Memory[address[1]], 32);
 }
-int CMP()
+void CMP()
 {
 	int i;
-	int PSW;
 	for (i = 0; i < 4; i++)
 	{
 		MAR[i] = Memory[PC][6 + i];
@@ -331,15 +332,10 @@ int CMP()
 	int compared_number_1 = Transform_1(MDR[0], 32);
 	int compared_number_2 = Transform_1(MDR[1], 32);
 	PSW = compared_number_1 - compared_number_2 ;
-	if (PSW==0)
-	return 1;
-	else 
-	return 0;
 }
-int TEST()
+void TEST()
 {
 	int i;
-	int ZF=1;
 	char test[MAX_M]={};
 	for (i = 0; i < 4; i++)
 	{
@@ -366,7 +362,6 @@ int TEST()
 			break;
 		}
 	}
-	return ZF;
 }
 void OR()
 {
