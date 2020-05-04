@@ -367,6 +367,126 @@ int TEST()
 	}
 	return ZF;
 }
+void OR()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	for (int i = 0; i < 32; i++)
+	{
+		MDR[0][i] = MDR[0][i] | MDR[0][i];
+		Memory[address[0]][i] = MDR[0][i];
+	}
+}
+void AND()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	for (int i = 0; i < 32; i++)
+	{
+		MDR[0][i] = MDR[0][i] & MDR[1][i];
+		Memory[address[0]][i] = MDR[0][i];
+	}
+}
+void XOR()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	for (int i = 0; i < 32; i++)
+	{
+		MDR[0][i] = MDR[0][i] ^ MDR[1][i];
+		Memory[address[0]][i] = MDR[0][i];
+	}
+}
+void NOT()
+{
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (int i = 0; i < 32; i++)
+	{
+		MDR[0][i] = !MDR[0][i];
+		Memory[address[0]][i] = MDR[0][i];
+	}
+}
+void SAL()//SAL 1000 111111111 11111(最大32 取5位） 
+{
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	char temp[5];
+	for (int i = 19; i < 24; i++)
+	{
+		temp[i - 19] = Memory[PC][i];
+	}
+	cl = Transform_1(temp, 5);
+	for (int i = 0; i < 32; i++)
+	{
+		if (i < 32 - cl)
+		{
+			MDR[0][i] = MDR[0][i + cl];
+		}
+		else
+		{
+			MDR[0][i] = 0;
+		}
+		Memory[address[0]][i] = MDR[0][i];
+	}
+}
+void SHL()//SHL 1000 111111111 11111
+{
+	for (int i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	char temp[5];
+	for (int i = 19; i < 24; i++)
+	{
+		temp[i - 19] = Memory[PC][i];
+	}
+	cl = Transform_1(temp, 5);
+	for (int i = 0; i < 32; i++)
+	{
+		if (i < 32 - cl)
+		{
+			MDR[0][i] = MDR[0][i + cl];
+		}
+		else
+		{
+			MDR[0][i] = 0;
+		}
+		Memory[address[0]][i] = MDR[0][i];
+	}
+
+}
 void SHR(){
 	int i;
 	for (i = 0; i < 4; i++)
