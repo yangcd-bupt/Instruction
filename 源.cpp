@@ -55,7 +55,7 @@ void Transform_2(int number, char ch[], int length)//十进制数转化为二进
 void Addressing(int distinguish)
 {
 	int addressing_mode = Transform_1(MAR, 4);
-	int i, j;
+	int i;
 	char temp[6];
 	if (distinguish == 1)
 	{
@@ -569,7 +569,8 @@ int main() {
 		}
 	}
 	while (PC < i) {
-		strcpy_s(IR, Memory[PC]);
+		for (int j = 0; j < MAX_M; j++)
+			IR[j] = Memory[PC][j];
 
 		char ch[6];
 		int ir;
