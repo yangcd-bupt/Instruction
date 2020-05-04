@@ -578,7 +578,31 @@ int main() {
 		ir = Transform_1(ch,6);
 		switch (ir)
 		{
-		case 0:ADD();
+			case 0:MOV();break;
+			case 1:XCHG();break;
+			case 2:PUSH();break;
+			case 3:POP();break;
+			case 4:ADD();break;
+			case 5:SUB();break;
+			case 6:MUL();break;
+			case 7:DIV();break;
+			case 8:INC();break;
+			case 9:DEC();break;
+			case 10:CMP();break;
+			case 11:TEST();break;
+			case 12:OR();break;
+			case 13:AND();break;
+			case 14:XOR();break;
+			case 15:NOT();break;
+			case 16:SAL();break;
+			case 17:SHL();break;
+			case 18:SAR();break;
+			case 19:SHR();break;
+			case 20:JMP();break;
+			case 21:In();break;
+			case 22:Out();break;
+
+				
 		default:
 			break;
 		}
