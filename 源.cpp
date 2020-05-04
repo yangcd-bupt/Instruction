@@ -68,6 +68,7 @@ void Addressing(int distinguish)
 			temp[i] = Memory[PC][23 + i];
 		}
 	}
+	int value, value_1, value_2;
 	switch (addressing_mode)
 	{
 	case 1://立即寻址
@@ -77,7 +78,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 2://直接寻址
-		int value = Transform_1(temp, 6);
+		 value = Transform_1(temp, 6);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
 		{
@@ -85,8 +86,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 3://间接寻址
-		int value_1 = Transform_1(temp, 6);
-		int value_2 = Transform_1(Memory[value_1], 32);
+		 value_1 = Transform_1(temp, 6);
+		 value_2 = Transform_1(Memory[value_1], 32);
 		address[distinguish - 1] = value_2;
 		for (i = 0; i < 32; i++)
 		{
@@ -94,7 +95,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 4://寄存器寻址
-		int value = Transform_1(temp, 6);
+		 value = Transform_1(temp, 6);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
 		{
@@ -102,8 +103,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 5://寄存器间接寻址
-		int value_1 = Transform_1(temp, 6);
-		int value_2 = Transform_1(Register[value_1], 32);
+		 value_1 = Transform_1(temp, 6);
+		 value_2 = Transform_1(Register[value_1], 32);
 		address[distinguish - 1] = value_2;
 		for (i = 0; i < 32; i++)
 		{
@@ -113,8 +114,8 @@ void Addressing(int distinguish)
 	case 6://隐含寻址
 		break;
 	case 7://基址寻址
-		int value_1 = Transform_1(Rd, 32);
-		int value_2 = Transform_1(temp, 6);
+		 value_1 = Transform_1(Rd, 32);
+		 value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
 		value_2 = value_1 + value_2;
 		for (i = 0; i < 32; i++)
@@ -123,8 +124,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 8://变址寻址
-		int value_1 = Transform_1(Rx, 32);
-		int value_2 = Transform_1(temp, 6);
+		 value_1 = Transform_1(Rx, 32);
+		 value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
 		value_2 = value_1 + value_2;
 		for (i = 0; i < 32; i++)
@@ -133,8 +134,8 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 9://相对寻址
-		int value_1 = Transform_1(PC, 32);
-		int value_2 = Transform_1(temp, 6);
+		 value_1 = PC;
+		 value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
 		value_2 = value_1 + value_2;
 		for (i = 0; i < 32; i++)
@@ -446,7 +447,7 @@ void SAL()//SAL 1000 111111111 11111(最大32 取5位）
 	{
 		temp[i - 19] = Memory[PC][i];
 	}
-	cl = Transform_1(temp, 5);
+	int cl = Transform_1(temp, 5);
 	for (int i = 0; i < 32; i++)
 	{
 		if (i < 32 - cl)
@@ -472,7 +473,7 @@ void SHL()//SHL 1000 111111111 11111
 	{
 		temp[i - 19] = Memory[PC][i];
 	}
-	cl = Transform_1(temp, 5);
+	int cl = Transform_1(temp, 5);
 	for (int i = 0; i < 32; i++)
 	{
 		if (i < 32 - cl)
@@ -561,7 +562,9 @@ void IN(){
 int main() {
 	ifstream file("data.txt");
 	int datalen = 0, i = 0;
-	while (!file.eof()) {
+	for (int j = 0; j < MAX_M; j++)
+		cout << Memory[0][j];
+	/*while (!file.eof()) {
 		file >> Memory[i][datalen++];
 		if (datalen == MAX_M)
 		{
@@ -575,7 +578,7 @@ int main() {
 		char ch[6];
 		int ir;
 		strncpy(ch, IR, 6);
-		ir = Transform(ch);
+		ir = Transform_1(ch,6);
 		switch (ir)
 		{
 		case 0:ADD();
@@ -583,5 +586,5 @@ int main() {
 			break;
 		}
 		PC++;
-	}
+	}*/
 }
