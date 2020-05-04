@@ -2,23 +2,23 @@
 #include<iostream>
 #include<fstream>
 #include<cmath>
-#define MAX_N 512//´æ´¢Æ÷ĞĞÊı
-#define MAX_M 32//Ö¸Áî³¤¶ÈÎªÒ»¸ö×Ö³¤
+#define MAX_N 512//å­˜å‚¨å™¨è¡Œæ•°
+#define MAX_M 32//æŒ‡ä»¤é•¿åº¦ä¸ºä¸€ä¸ªå­—é•¿
 using namespace std;
-static char Memory[MAX_N][MAX_M];//´æ´¢Æ÷
-static char Register[16][MAX_M];//Í¨ÓÃ¼Ä´æÆ÷
-static char MAR[4];//²Ù×÷ÊıµØÖ·¼Ä´æÆ÷
-static char MDR[2][MAX_M];//²Ù×÷Êı¼Ä´æÆ÷
+static char Memory[MAX_N][MAX_M];//å­˜å‚¨å™¨
+static char Register[16][MAX_M];//é€šç”¨å¯„å­˜å™¨
+static char MAR[4];//æ“ä½œæ•°åœ°å€å¯„å­˜å™¨
+static char MDR[2][MAX_M];//æ“ä½œæ•°å¯„å­˜å™¨
 static char ACC[MAX_M];
-static char Rx[MAX_M];//±äÖ·¼Ä´æÆ÷
-static char Rd[MAX_M];//»ùÖ·¼Ä´æÆ÷
-static char IR[MAX_M];//Ö¸Áî¼Ä´æÆ÷
-static char SP[MAX_M];//Õ»¶¥µØÖ·¼Ä´æÆ÷
-static char CL[MAX_M];//ÒÆÎ»¼Ä´æÆ÷
+static char Rx[MAX_M];//å˜å€å¯„å­˜å™¨
+static char Rd[MAX_M];//åŸºå€å¯„å­˜å™¨
+static char IR[MAX_M];//æŒ‡ä»¤å¯„å­˜å™¨
+static char SP[MAX_M];//æ ˆé¡¶åœ°å€å¯„å­˜å™¨
+static char CL[MAX_M];//ç§»ä½å¯„å­˜å™¨
 static int PC = 0;
 static int address[2];
-//Ö¸Áî¸ñÊ½£º6 4 9 4 9
-int Transform_1(char ch[], int length) //¶ş½øÖÆ´®×ªÊ®½øÖÆÊıÖµ
+//æŒ‡ä»¤æ ¼å¼ï¼š6 4 9 4 9
+int Transform_1(char ch[], int length) //äºŒè¿›åˆ¶ä¸²è½¬åè¿›åˆ¶æ•°å€¼
 {
 	int decimal_number = 0;
 	int i;
@@ -34,7 +34,7 @@ int Transform_1(char ch[], int length) //¶ş½øÖÆ´®×ªÊ®½øÖÆÊıÖµ
 	return decimal_number;
 }
 
-void Transform_2(int number, char ch[], int length)//Ê®½øÖÆÊı×ª»¯Îª¶ş½øÖÆ´®
+void Transform_2(int number, char ch[], int length)//åè¿›åˆ¶æ•°è½¬åŒ–ä¸ºäºŒè¿›åˆ¶ä¸²
 {
 	length = length - 1;
 	while (number != 0)
@@ -70,13 +70,13 @@ void Addressing(int distinguish)
 	}
 	switch (addressing_mode)
 	{
-	case 1://Á¢¼´Ñ°Ö·
+	case 1://ç«‹å³å¯»å€
 		for (i = 26; i < 32; i++)
 		{
 			MDR[distinguish - 1][i] = temp[i - 26];
 		}
 		break;
-	case 2://Ö±½ÓÑ°Ö·
+	case 2://ç›´æ¥å¯»å€
 		int value = Transform_1(temp, 6);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
@@ -84,7 +84,7 @@ void Addressing(int distinguish)
 			MDR[distinguish - 1][i] = Memory[value][i];
 		}
 		break;
-	case 3://¼ä½ÓÑ°Ö·
+	case 3://é—´æ¥å¯»å€
 		int value_1 = Transform_1(temp, 6);
 		int value_2 = Transform_1(Memory[value_1], 32);
 		address[distinguish - 1] = value_2;
@@ -93,7 +93,7 @@ void Addressing(int distinguish)
 			MDR[distinguish - 1][i] = Memory[value_2][i];
 		}
 		break;
-	case 4://¼Ä´æÆ÷Ñ°Ö·
+	case 4://å¯„å­˜å™¨å¯»å€
 		int value = Transform_1(temp, 6);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
@@ -101,7 +101,7 @@ void Addressing(int distinguish)
 			MDR[distinguish - 1][i] = Register[value][i];
 		}
 		break;
-	case 5://¼Ä´æÆ÷¼ä½ÓÑ°Ö·
+	case 5://å¯„å­˜å™¨é—´æ¥å¯»å€
 		int value_1 = Transform_1(temp, 6);
 		int value_2 = Transform_1(Register[value_1], 32);
 		address[distinguish - 1] = value_2;
@@ -110,9 +110,9 @@ void Addressing(int distinguish)
 			MDR[distinguish - 1][i] = Memory[value_2][i];
 		}
 		break;
-	case 6://Òşº¬Ñ°Ö·
+	case 6://éšå«å¯»å€
 		break;
-	case 7://»ùÖ·Ñ°Ö·
+	case 7://åŸºå€å¯»å€
 		int value_1 = Transform_1(Rd, 32);
 		int value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
@@ -122,7 +122,7 @@ void Addressing(int distinguish)
 			MDR[distinguish - 1][i] = Memory[value_2][i];
 		}
 		break;
-	case 8://±äÖ·Ñ°Ö·
+	case 8://å˜å€å¯»å€
 		int value_1 = Transform_1(Rx, 32);
 		int value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
@@ -132,7 +132,7 @@ void Addressing(int distinguish)
 			MDR[distinguish - 1][i] = Memory[value_2][i];
 		}
 		break;
-	case 9://Ïà¶ÔÑ°Ö·
+	case 9://ç›¸å¯¹å¯»å€
 		int value_1 = Transform_1(PC, 32);
 		int value_2 = Transform_1(temp, 6);
 		address[distinguish - 1] = value_2;
@@ -252,6 +252,77 @@ void PUSH()
 		Memory[value][i] = Memory[address[0]][i];
 	}
 	Transform_2(value, SP, 32);
+}
+void SHR(){
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	int number_1 = Transform_1(MDR[0], 32);
+	int number_2 = Transform_1(MDR[1], 32);
+	number_1=number_1 << number_2;
+	Transform_2(number_1, Memory[address[0]], 32);
+}
+void SAR(){
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	int number_1 = Transform_1(MDR[0], 32);
+	int number_2 = Transform_1(MDR[1], 32);
+	number_1=number_1 << number_2;
+	Transform_2(number_1, Memory[address[0]], 32);
+}
+void JMP(){
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	PC = Transform_1(MDR[0], 32);
+}
+void OUT(){
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	Transform_2(MAR[1], Memory[address[0]], 32);
+}
+void IN(){
+	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][19 + i];
+	}
+	Addressing(2);
+	Transform_2(MAR[0], Memory[address[1]], 32);
 }
 int main() {
 	ifstream file("data.txt");
