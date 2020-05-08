@@ -30,3 +30,19 @@
     void Addressing(int distinguish)//寻址函数
     参数distinguish的说明，若为操作数1寻址，则distinguish=1，若为操作数2寻址，则distinguish=2，这一点是和变量说明1相对应，
     若没有这些操作，计算得到的地址存放到MDR1还是MDR2将无法确定
+##斐波那契数列思想：
+==
+    MOV M1 立即寻址 1 M1=32
+    MOV M2 立即寻址 1     M2=33
+    MOV X1 M1                  X1=64
+    MOV X2 M2                  X2=65
+    MOV X3 M3                  X3=66
+    MOV X4 0                     X4=67
+    ADD 间接寻址 X1 间接寻址 X3
+    ADD 间接寻址 X2 间接寻址 X3
+    INC X1
+    INC X2
+    INC X3
+    INC X4
+    JZ 立即寻址 X4  10 跳回
+    OUT
