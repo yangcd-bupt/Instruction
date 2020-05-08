@@ -107,8 +107,8 @@ void Addressing(int distinguish)
 		break;
 	case 3://间接寻址
 		value_1 = Transform_1(temp, 9);
-		for (int j = 0; j < 32; j++)
-			cout << Memory[value_1][j];
+		//for (int j = 0; j < 32; j++)
+			//cout << Memory[value_1][j];
 		value_2 = Transform_1(Memory[value_1], 32);
 		address[distinguish - 1] = value_2;
 		for (i = 0; i < 32; i++)
@@ -221,9 +221,8 @@ void MOV()
 	{
 		MDR[0][i] = MDR[1][i];
 		Memory[address[0]][i] = MDR[1][i];
-		cout << Memory[address[0]][i];
+		//cout << Memory[address[0]][i];
 	}
-	cout << endl;
 }
 void XCHG()
 {
@@ -654,7 +653,11 @@ int main() {
 		case 17:SHL(); break;
 		case 18:SAR(); break;
 		case 19:SHR(); break;
-		case 20:JZ(); break;
+		case 20:for (i = 0; i < 67; i++) {
+			for (j = 0; j < 32; j++)
+				cout << Memory[i][j];
+			cout << endl;
+		}JZ(); break;
 		case 21:IN(); break;
 		case 22:OUT(); break;
 		default:break;
