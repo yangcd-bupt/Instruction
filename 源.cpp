@@ -90,6 +90,8 @@ void Addressing(int distinguish)
 	switch (addressing_mode)
 	{
 	case 1://立即寻址
+		for (i = 0; i < 23; i++)
+			MDR[distinguish - 1][i] = '0';
 		for (i = 23; i < 32; i++)
 		{
 			MDR[distinguish - 1][i] = temp[i - 23];
@@ -218,7 +220,7 @@ void MOV()
 	for (i = 0; i < 32; i++)
 	{
 		MDR[0][i] = MDR[1][i];
-		Memory[address[0]][i] = Memory[address[1]][i];
+		Memory[address[0]][i] = MDR[1][i];
 		cout << Memory[address[0]][i];
 	}
 	cout << endl;
