@@ -4,8 +4,8 @@ MOV X1 M1                  X1=64
 MOV X2 M2                  X2=65
 MOV X3 M3                  X3=66
 MOV X4 0                     X4=67
-ADD 间接寻址 X1 间接寻址 X3           
-ADD 间接寻址 X2 间接寻址 X3            
+ADD 间接寻址 X1 间接寻址 X3
+ADD 间接寻址 X2 间接寻址 X3
 INC X1
 INC X2
 INC X3
@@ -62,6 +62,8 @@ void Transform_2(int number, char ch[], int length)//十进制数转化为二进
 		{
 			ch[length] = '1';
 		}
+		else
+			ch[length] = '0';
 		length--;
 	}
 }
@@ -554,23 +556,28 @@ void JZ() {
 	int number_2 = Transform_1(MDR[1], 32);
 	if (number_1 != number_2)
 		PC = PC - 6;
+	else
+		PC++;
 }
-void OUT() {
+void OUT()
+{
 	int i;
+	for (i = 0; i < 4; i++)
+	{
+		MAR[i] = Memory[PC][6 + i];
+	}
+	Addressing(1);
 	for (i = 0; i < 4; i++)
 	{
 		MAR[i] = Memory[PC][19 + i];
 	}
 	Addressing(2);
 	int number_2 = Transform_1(MDR[1], 32);
-	for (i = 0; i < number_2; i++) {
-		int j = 0;
-		for (j = 0; j < 4; j++)
-		{
-			MAR[j] = Memory[PC][6 + j];
-		}
-		Addressing(1);
-		int number_1 = Transform_1(MDR[address[0]], 32);
+	//for (i = 0; i < 32; i++)
+	//	cout << MDR[1][i];
+	for (i = 0; i < number_2; i++)
+	{
+		int number_1 = Transform_1(Memory[address[0]], 32);
 		printf("%d\n", number_1);
 		address[0]++;
 	}
@@ -601,8 +608,6 @@ int main() {
 			datalen = 0;
 		}
 	}
-	
-		
 	for (i = 14; i < 512; i++)
 	{
 		for (j = 0; j < 32; j++)
@@ -610,26 +615,15 @@ int main() {
 			Memory[i][j] = '0';
 		}
 	}
-	/*for (i = 0; i < 14; i++) {
-		for (j = 0; j < 32; j++)
-			cout << Memory[i][j];
-		cout << endl;
-	}*/
-	
-	while (PC <MAX_N) {
-
-		/*for (int j = 0; j < MAX_M; j++) {
-			IR[j] = Memory[PC][j];
-			printf("%c", IR[j]);
-		}
-		printf("\n");*/
+	while (PC < MAX_N && PC < 14)
+	{
 		for (i = 0; i < 2; i++)
 			for (j = 0; j < 32; j++)
 				MDR[i][j] = 0;
 		char ch[6];
 		int ir;
 		for (int j = 0; j < 6; j++)
-			ch[j] = IR[j];
+			ch[j] = Memory[PC][j];
 		ir = Transform_1(ch, 6);
 		switch (ir)
 		{
@@ -653,18 +647,12 @@ int main() {
 		case 17:SHL(); break;
 		case 18:SAR(); break;
 		case 19:SHR(); break;
-		case 20:for (i = 0; i < 67; i++) {
-			for (j = 0; j < 32; j++)
-				cout << Memory[i][j];
-			cout << endl;
-		}JZ(); break;
+		case 20:JZ(); break;
 		case 21:IN(); break;
 		case 22:OUT(); break;
 		default:break;
 		}
 		if (ir != 20)
 			PC++;
-		if (ir == 22)
-			break;
 	}
 }
