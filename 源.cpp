@@ -1,22 +1,10 @@
-/* MOV M1 立即寻址 1 M1=32
-MOV M2 立即寻址 1     M2=33
-MOV X1 M1                  X1=64
-MOV X2 M2                  X2=65
-MOV X3 M3                  X3=66
-MOV X4 0                     X4=67
-ADD 间接寻址 X1 间接寻址 X3
-ADD 间接寻址 X2 间接寻址 X3
-INC X1
-INC X2
-INC X3
-INC X4
-JZ 立即寻址 X4  10 跳回
-OUT*/
 #include<cstdio>
 #include<iostream>
 #include<fstream>
 #include<cmath>
 #include<cstring>
+#include<stdlib.h>
+#include<ctime>
 #define MAX_N 512//存储器行数
 #define MAX_M 32//指令长度为一个字长
 using namespace std;
@@ -92,6 +80,7 @@ void Addressing(int distinguish)
 	switch (addressing_mode)
 	{
 	case 1://立即寻址
+		cout << "进行立即寻址" << endl;
 		for (i = 0; i < 23; i++)
 			MDR[distinguish - 1][i] = '0';
 		for (i = 23; i < 32; i++)
@@ -100,6 +89,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 2://直接寻址
+		cout << "进行直接寻址" << endl;
 		value = Transform_1(temp, 9);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
@@ -108,6 +98,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 3://间接寻址
+		cout << "进行间接寻址" << endl;
 		value_1 = Transform_1(temp, 9);
 		//for (int j = 0; j < 32; j++)
 			//cout << Memory[value_1][j];
@@ -119,6 +110,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 4://寄存器寻址
+		cout << "---------进行寄存器寻址-----------" << endl;
 		value = Transform_1(temp, 9);
 		address[distinguish - 1] = value;
 		for (i = 0; i < 32; i++)
@@ -127,6 +119,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 5://寄存器间接寻址
+		cout << "---------进行寄存器间接寻址-----------" << endl;
 		value_1 = Transform_1(temp, 9);
 		value_2 = Transform_1(Register[value_1], 32);
 		address[distinguish - 1] = value_2;
@@ -136,8 +129,10 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 6://隐含寻址
+		cout << "---------进行隐含寻址-----------" << endl;
 		break;
 	case 7://基址寻址
+		cout << "---------进行基址寻址-----------" << endl;
 		value_1 = Transform_1(Rd, 32);
 		value_2 = Transform_1(temp, 9);
 		address[distinguish - 1] = value_2;
@@ -148,6 +143,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 8://变址寻址
+		cout << "---------进行变址寻址-----------" << endl;
 		value_1 = Transform_1(Rx, 32);
 		value_2 = Transform_1(temp, 9);
 		address[distinguish - 1] = value_2;
@@ -158,6 +154,7 @@ void Addressing(int distinguish)
 		}
 		break;
 	case 9://相对寻址
+		cout << "---------进行相对寻址-----------" << endl;
 		value_1 = PC;
 		value_2 = Transform_1(temp, 9);
 		address[distinguish - 1] = value_2;
@@ -177,11 +174,13 @@ void ADD()
 	{
 		MAR[i] = Memory[PC][6 + i];
 	}
+	cout << "对第一个操作数进行寻址" << endl;
 	Addressing(1);
 	for (i = 0; i < 4; i++)
 	{
 		MAR[i] = Memory[PC][19 + i];
 	}
+	cout << "对第二个操作数进行寻址" << endl;
 	Addressing(2);
 	int addition_number_1 = Transform_1(MDR[0], 32);
 	int addition_number_2 = Transform_1(MDR[1], 32);
@@ -213,11 +212,13 @@ void MOV()
 	{
 		MAR[i] = Memory[PC][6 + i];
 	}
+	cout << "对第一个操作数进行寻址" << endl;
 	Addressing(1);
 	for (i = 0; i < 4; i++)
 	{
 		MAR[i] = Memory[PC][19 + i];
 	}
+	cout << "对第二个操作数进行寻址" << endl;
 	Addressing(2);
 	for (i = 0; i < 32; i++)
 	{
@@ -286,6 +287,7 @@ void INC()
 	{
 		MAR[i] = Memory[PC][6 + i];
 	}
+	cout << "对第一个操作数进行寻址" << endl;
 	Addressing(1);
 	int addition_number_1 = Transform_1(MDR[0], 32);
 	addition_number_1 = addition_number_1 + 1;
@@ -546,11 +548,13 @@ void JZ() {
 	{
 		MAR[i] = Memory[PC][6 + i];
 	}
+	cout << "对第一个操作数进行寻址" << endl;
 	Addressing(1);
 	for (i = 0; i < 4; i++)
 	{
 		MAR[i] = Memory[PC][19 + i];
 	}
+	cout << "对第二个操作数进行寻址" << endl;
 	Addressing(2);
 	int number_1 = Transform_1(MDR[0], 32);
 	int number_2 = Transform_1(MDR[1], 32);
@@ -566,19 +570,24 @@ void OUT()
 	{
 		MAR[i] = Memory[PC][6 + i];
 	}
+	cout << "对第一个操作数进行寻址" << endl;
 	Addressing(1);
 	for (i = 0; i < 4; i++)
 	{
 		MAR[i] = Memory[PC][19 + i];
 	}
+	cout << "对第二个操作数进行寻址" << endl;
 	Addressing(2);
 	int number_2 = Transform_1(MDR[1], 32);
 	//for (i = 0; i < 32; i++)
 	//	cout << MDR[1][i];
+	cout << "----------------------输出" << number_2 << "个斐波那契数列----------------------------" << endl;
 	for (i = 0; i < number_2; i++)
 	{
 		int number_1 = Transform_1(Memory[address[0]], 32);
-		printf("%d\n", number_1);
+		printf("%d ", number_1);
+		if (i % 5 == 0)
+			cout << endl;
 		address[0]++;
 	}
 }
@@ -596,9 +605,15 @@ void IN() {
 	Addressing(2);
 	Transform_2(MAR[0], Memory[address[1]], 32);
 }
+void delay_msec(int msec)
+{
+	clock_t now = clock();
+	while (clock() - now < msec);
+}
 int main() {
 	PC = 0;
 	ifstream file("data.txt");
+	cout << "-------------导入数据-------------" << endl;
 	int datalen = 0, i = 0, j = 0;
 	while (!file.eof()) {
 		file >> Memory[i][datalen++];
@@ -608,6 +623,14 @@ int main() {
 			datalen = 0;
 		}
 	}
+	for (i = 0; i < 14; i++)
+	{
+		for (j = 0; j < 32; j++)
+			cout << Memory[i][j];
+		cout << endl;
+	}
+
+	cout << "内存初始化" << endl;
 	for (i = 14; i < 512; i++)
 	{
 		for (j = 0; j < 32; j++)
@@ -615,41 +638,48 @@ int main() {
 			Memory[i][j] = '0';
 		}
 	}
+	delay_msec(1000);
 	while (PC < MAX_N && PC < 14)
 	{
+		delay_msec(100);
 		for (i = 0; i < 2; i++)
 			for (j = 0; j < 32; j++)
 				MDR[i][j] = 0;
 		char ch[6];
 		int ir;
+		cout << "-------------读取、分析并执行指令-------------" << endl;
 		for (int j = 0; j < 6; j++)
 			ch[j] = Memory[PC][j];
+		for (i = 0; i < 32; i++)
+			cout << Memory[PC][i];
+		cout << endl;
 		ir = Transform_1(ch, 6);
+
 		switch (ir)
 		{
-		case 0:MOV(); break;
-		case 1:XCHG(); break;
-		case 2:PUSH(); break;
-		case 3:POP(); break;
-		case 4:ADD(); break;
-		case 5:SUB(); break;
-		case 6:MUL(); break;
-		case 7:DIV(); break;
-		case 8:INC(); break;
-		case 9:DEC(); break;
-		case 10:CMP(); break;
-		case 11:TEST(); break;
-		case 12:OR(); break;
-		case 13:AND(); break;
-		case 14:XOR(); break;
-		case 15:NOT(); break;
-		case 16:SAL(); break;
-		case 17:SHL(); break;
-		case 18:SAR(); break;
-		case 19:SHR(); break;
-		case 20:JZ(); break;
-		case 21:IN(); break;
-		case 22:OUT(); break;
+		case 0:cout << "指令为MOV" << endl; MOV(); break;
+		case 1:cout << "指令为XCHG" << endl; XCHG(); break;
+		case 2:cout << "指令为PUSH" << endl; PUSH(); break;
+		case 3:cout << "指令为POP" << endl; POP(); break;
+		case 4:cout << "指令为ADD" << endl; ADD(); break;
+		case 5:cout << "指令为SUB" << endl; SUB(); break;
+		case 6:cout << "指令为MUL" << endl; MUL(); break;
+		case 7:cout << "指令为DIV" << endl; DIV(); break;
+		case 8:cout << "指令为INC" << endl; INC(); break;
+		case 9:cout << "指令为DEC" << endl; DEC(); break;
+		case 10:cout << "指令为CMP" << endl; CMP(); break;
+		case 11:cout << "指令为TEST" << endl; TEST(); break;
+		case 12:cout << "指令为OR" << endl; OR(); break;
+		case 13:cout << "指令为AND" << endl; AND(); break;
+		case 14:cout << "指令为XOR" << endl; XOR(); break;
+		case 15:cout << "指令为NOT" << endl; NOT(); break;
+		case 16:cout << "指令为SAL" << endl; SAL(); break;
+		case 17:cout << "指令为SHL" << endl; SHL(); break;
+		case 18:cout << "指令为SAR" << endl; SAR(); break;
+		case 19:cout << "指令为SHR" << endl; SHR(); break;
+		case 20:cout << "指令为JZ" << endl; JZ(); break;
+		case 21:cout << "指令为IN" << endl; IN(); break;
+		case 22:cout << "指令为OUT" << endl; OUT(); break;
 		default:break;
 		}
 		if (ir != 20)
